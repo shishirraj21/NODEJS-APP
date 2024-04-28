@@ -28,7 +28,7 @@ jobs:
 
   deploy:
     name: Deploy Docker image
-    runs-on: [myrunner1]
+    runs-on: ubuntu-latest
     needs: build
 
     steps:
