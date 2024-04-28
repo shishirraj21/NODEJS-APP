@@ -23,8 +23,8 @@ jobs:
       run: npm install
     - name: Build Docker image
       run: |
-        docker build -t shishiraj/node-js:latest .
-        docker tag shishirraj/node-js:latest shishirraj/node-js:latest
+        docker build -t shishirraj/ec2_node_deployment:v1 .
+        docker tag shishirraj/ec2_node_deployment:v1 shishirraj/ec2_node_deployment:v1
 
   deploy:
     name: Deploy Docker image
@@ -38,13 +38,13 @@ jobs:
     - name: Push Docker image to Docker Hub
       run: |
         docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
-        docker push shishirraj/node-js:latest
+        docker push shishirraj/ec2_node_deployment:v1:latest
 
     - name: Pull Docker image from Docker Hub
-      run: docker pull shishirraj/node-js:latest
+      run: docker pull shishirraj/ec2_node_deployment:v1:latest
 
     - name: Stop and remove existing Docker container (if any)
       run: docker stop nodejs-container || true && docker rm nodejs-container || true
 
     - name: Run Docker container
-      run: docker run -d -p 5000:5000 --name nodejs-container shishirraj/node-js:latest
+      run: docker run -d -p 5000:5000 --name nodejs-container shishirraj/ec2_node_deployment:v1:latest
