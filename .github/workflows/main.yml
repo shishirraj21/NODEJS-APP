@@ -17,13 +17,10 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '14'
+        node-version: '16.x'
 
     - name: Install dependencies
       run: npm install
-
-
-
     - name: Build Docker image
       run: |
         docker build -t shishiraj/node-js:latest .
