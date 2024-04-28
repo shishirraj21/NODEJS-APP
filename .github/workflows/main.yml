@@ -32,8 +32,7 @@ jobs:
     needs: build
 
     steps:
-    - name: Fetch Docker Hub credentials
-      run: echo "${{ secrets.DOCKERHUB_USERNAME }}\n${{ secrets.DOCKERHUB_PASSWORD }}" > ~/.docker/config.json
+    
 
     - name: Push Docker image to Docker Hub
       run: |
