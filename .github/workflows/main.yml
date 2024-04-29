@@ -36,9 +36,7 @@ jobs:
       run: |
         echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login --username "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
         docker push shishirraj/ec2_node_deployment:latest
-        env:
-          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-          DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+        
     - name: Pull Docker image from Docker Hub
       run: docker pull shishirraj/ec2_node_deployment:latest
 
