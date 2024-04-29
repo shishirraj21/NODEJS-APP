@@ -28,7 +28,7 @@ jobs:
 
   deploy:
     name: Deploy Docker image
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: build
 
     steps:
