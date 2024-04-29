@@ -1,49 +1,29 @@
-name: Node.js CI/CD
+name: CICD
 
 on:
   push:
-    branches:
-      - main
+    branches: main
 
 jobs:
   build:
-    name: Build and Test
-    runs-on: ubuntu-latest
-
+    runs-on: [ubuntu-latest]
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-      
-    - name: Setup Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '16.x'
-
-    - name: Install dependencies
-      run: npm install
-    - name: Build Docker image
-      run: |
-        docker build -t node-js:latest .
-        docker tag node-js:latest shishirraj/ec2_node_deployment:latest
-
+      - name: Checkout source
+        uses: actions/checkout@v3
+      - name: Login to docker hub
+        run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }} 
+      - name: Build docker image
+        run: docker build -t integrationninjas/nodejs-app .
+      - name: Publish image to docker hub
+        run: docker push integrationninjas/nodejs-app:latest
+        
   deploy:
-    name: Deploy Docker image
-    runs-on: self-hosted
     needs: build
-
+    runs-on: [runner9]
     steps:
-    - name: Push Docker image to Docker Hub
-      run: |
-        echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login --username "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
-        docker push shishirraj/ec2_node_deployment:latest
-        env:
-          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-          DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
-    - name: Pull Docker image from Docker Hub
-      run: docker pull shishirraj/ec2_node_deployment:latest
-
-    - name: Stop and remove existing Docker container (if any)
-      run: docker stop nodejs-container || true && docker rm nodejs-container || true
-
-    - name: Run Docker container
-      run: docker run -d -p 5000:5000 --name nodejs-container shishirraj/ec2_node_deployment:latest
+      - name: Pull image from docker hub
+        run: docker pull shishirraj/ec2_node_deployment:latest
+      - name: Delete old container
+        run: docker rm -f nodejs-app-container
+      - name: Run docker container
+        run: docker run -d -p 5000:5000 --name nodejs-app-container shishirraj/ec2_node_deployment
