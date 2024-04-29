@@ -19,7 +19,7 @@ jobs:
         
   deploy:
     needs: build
-    runs-on: runner9
+    runs-on: [runner9]
     steps:
       - name: Pull image from docker hub
         run: docker pull shishirraj/ec2_node_deployment:latest
