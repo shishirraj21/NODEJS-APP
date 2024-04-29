@@ -23,8 +23,8 @@ jobs:
       run: npm install
     - name: Build Docker image
       run: |
-        docker build -t node-js:v1 .
-        docker tag node-js:v1 shishirraj/ec2_node_deployment:latest
+        docker build -t node-js:latest .
+        docker tag node-js:latest shishirraj/ec2_node_deployment:latest
 
   deploy:
     name: Deploy Docker image
